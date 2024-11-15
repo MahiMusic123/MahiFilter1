@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
 import cv2
 import numpy as np
-import os
 
 app = Flask(__name__)
 
+# Set upload folder and output folder paths
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -27,17 +28,25 @@ def upload_image():
 
 @app.route('/process/<filename>')
 def process_image(filename):
-    # Example processing: Apply color transfer (you would implement your logic here)
+    # Apply color transfer logic here
     target_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    reference_image = cv2.imread('reference_image.jpg')  # Replace with your reference image path
+    
+    # Example: Load images using OpenCV (replace with your color transfer logic)
+    reference_image = cv2.imread('reference_image.jpg')  # reference image
     target_image = cv2.imread(target_path)
     
-    # Apply your color transfer logic here
+    # Example processing: (Apply color transfer to the target image)
+    target_image = apply_color_transfer(reference_image, target_image)
 
+    # Save the processed image
     output_path = os.path.join(app.config['OUTPUT_FOLDER'], 'output.jpg')
-    cv2.imwrite(output_path, target_image)  # Replace with processed image
+    cv2.imwrite(output_path, target_image)
     
     return render_template('result.html', image_file='output.jpg')
+
+def apply_color_transfer(reference, target):
+    # Example color transfer logic (use your own algorithm here)
+    return target  # Return modified target image
 
 if __name__ == '__main__':
     app.run(debug=True)
